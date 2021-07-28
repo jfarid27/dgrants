@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 
 // --- Types ---
 // The output from ethers/typechain allows array or object access to grant data, so we must define types for
@@ -12,3 +12,20 @@ export type GrantObject = {
 export type GrantArray = [BigNumber, string, string, string];
 export type GrantEthers = GrantArray & GrantObject;
 export type Grant = GrantObject | GrantEthers;
+export type GrantRound = {
+  address: string,
+  owner: string,
+  registry: string,
+  donationToken: string,
+  donationTokenName: string,
+  donationTokenSymbol: string,
+  donationTokenDecimals: BigNumberish,
+  funds: BigNumberish,
+  status: string,
+  startTime: BigNumberish,
+  endTime: BigNumberish,
+  metaPtr: string,
+  minContribution: BigNumberish,
+  hasPaidOut: Boolean
+};
+export type GrantRounds = Array<GrantRound>;

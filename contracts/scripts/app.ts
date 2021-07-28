@@ -30,6 +30,26 @@ const grants = [
   },
 ];
 
+// Define grantRounds to create (addresses are random)
+const rounds = [
+  {
+    owner: '0x9B4d61BB9b8B6CB33a75B9846f7E2C8d67d137fa',
+    token: '0xDe30da39c46104798bB5aA3fe8B9e0e1F348163F', // GTC address
+    startTime: '1627374646',
+    endTime: '1630079135',
+    metaPtr: 'https://metadata-pointer.com',
+    minContribution: '100',
+  },
+  {
+    owner: '0x9B4d61BB9b8B6CB33a75B9846f7E2C8d67d137fa',
+    token: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI address
+    startTime: '1627465515',
+    endTime: '1630140315',
+    metaPtr: 'https://metadata-pointer.com',
+    minContribution: '100',
+  },
+];
+
 // --- Method to execute ---
 async function main(): Promise<void> {
   // Only run on Hardhat network
@@ -42,6 +62,26 @@ async function main(): Promise<void> {
   const GrantRegistryFactory: ContractFactory = await ethers.getContractFactory('GrantRegistry', deployer);
   const registry = await (await GrantRegistryFactory.deploy()).deployed();
   console.log(`Deployed GrantRegistry to ${registry.address}`);
+
+  const GrantRoundFactory: ContractFactory = await ethers.getContractFactory('GrantRoundFactory', deployer);
+  const roundFactory = await (await GrantRoundFactory.deploy()).deployed();
+  console.log(`Deployed GrantRoundFactory to ${roundFactory.address}`);
+
+  // create the rounds
+  await Promise.all(
+    rounds.map((round) =>
+      roundFactory.createGrantRound(
+        round.owner,
+        registry.address,
+        round.token,
+        round.startTime,
+        round.endTime,
+        round.metaPtr,
+        round.minContribution
+      )
+    )
+  );
+  console.log(`Created ${rounds.length} dummy rounds`);
 
   // Create the grants
   await Promise.all(grants.map((grant) => registry.createGrant(grant.owner, grant.payee, grant.metaPtr)));
