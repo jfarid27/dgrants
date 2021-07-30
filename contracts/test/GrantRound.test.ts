@@ -54,7 +54,7 @@ describe('GrantRound', function () {
       deployer
     );
 
-    startTime = await setNextBlockTimestamp(deployer.provider, startTime, 200);
+    startTime = await setNextBlockTimestamp(startTime + 200);
     endTime = startTime + 86400; // One day
 
     roundContract = await roundContractFactory.deploy(
